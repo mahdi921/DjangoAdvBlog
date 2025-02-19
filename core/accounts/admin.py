@@ -4,6 +4,7 @@ from accounts.models import User, Profile
 
 admin.site.register(Profile)
 
+
 @admin.register(User)
 class CustomUserAdmin(UserAdmin):
     # The fields to be used in displaying the User model.
@@ -21,21 +22,21 @@ class CustomUserAdmin(UserAdmin):
         ),
         ("Permissions", {
             "fields": (
-                        "is_superuser","is_staff", "is_active", 
-                )
-            }
+                "is_superuser", "is_staff", "is_active",
+            )
+        }
         ),
         ("Group Permissions", {
             "fields": (
-                        "groups", "user_permissions"
-                )
-            }
+                "groups", "user_permissions"
+            )
+        }
         ),
         ("Important Dates", {
             "fields": (
-                        "last_login",
-                )
-            }
+                "last_login",
+            )
+        }
         ),
     )
     # add_fieldsets is not a standard ModelAdmin attribute. UserAdmin
@@ -47,5 +48,5 @@ class CustomUserAdmin(UserAdmin):
                 "email", "password1", "password2", "is_superuser",
                 "is_staff", "is_active", "groups", "user_permissions"
             )}
-        ),
+         ),
     )
