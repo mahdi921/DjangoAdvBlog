@@ -2,13 +2,9 @@ from django.db import models
 from django.contrib.auth.models import (
     BaseUserManager, AbstractBaseUser, PermissionsMixin)
 
-# Create your models here.
-
 class UserManager(BaseUserManager):
-    """
-    Custom user model manager where email is the unique identifiers
-    for authentication instead of usernames.
-    """
+    # Custom user model manager where email is the unique identifiers
+    # for authentication instead of usernames.
     def create_user(self, email, password, **extra_fields):
         """
         Create and save a user with the given email and password.
@@ -24,9 +20,7 @@ class UserManager(BaseUserManager):
         return user
 
     def create_superuser(self, email, password, **extra_fields):
-        """
-        Create and save a SuperUser with the given email and password.
-        """
+        # Create and save a SuperUser with the given email and password.
         extra_fields.setdefault('is_staff', True)
         extra_fields.setdefault('is_superuser', True)
         extra_fields.setdefault('is_active', True)
@@ -39,9 +33,7 @@ class UserManager(BaseUserManager):
 
 
 class User(AbstractBaseUser, PermissionsMixin):
-    '''
-    Custom User Model For The Project or App
-    '''
+    # Custom User Model For The Project or App
     email = models.EmailField(
         verbose_name='Email Address'
         ,max_length=255,
