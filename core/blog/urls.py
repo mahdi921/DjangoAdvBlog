@@ -1,12 +1,12 @@
 from django.urls import path
 from blog import views
 from django.views.generic import TemplateView
+from django.views.generic import RedirectView
 
 app_name = "blog"
 
 urlpatterns = [
-    path("fbv", views.index_view, name="fbv-test"),
-    # path("cbv", TemplateView.as_view(template_name="index.html")),
-    path("cbv", views.IndexView.as_view(), name='cbv-index' )
-
+    path("cbv", views.IndexView.as_view(), name='cbv-index'),
+    path('post/', views.PostList.as_view(), name='post-list'),
+    path("go-to-mk/<int:pk>", views.RedirectToMk.as_view(), name="go-to-mk"),
 ]
