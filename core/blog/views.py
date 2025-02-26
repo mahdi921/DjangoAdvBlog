@@ -1,8 +1,8 @@
 from django.shortcuts import render
-from django.views.generic import RedirectView
-from django.views.generic.base import TemplateView
-from django.views.generic.list import ListView
+from django.views.generic import RedirectView, FormView,\
+    DetailView, ListView, TemplateView, CreateView
 from blog.models import Post
+from blog.forms import PostForm
 from django.shortcuts import get_object_or_404
 from django.utils import timezone
 
@@ -37,9 +37,36 @@ def redirect_to_mk(request):
 # an example of class based view using RedirectView built-in class
 class RedirectToMk(RedirectView):
     url = 'https://maktabkhooneh.com/'
-    
+
 
 class PostList(ListView):
     queryset = Post.objects.all()
     context_object_name = 'posts'
+    paginate_by = 2
+
+
+class PostDetailView(DetailView):
+    model = Post
+
+
+'''
+class PostCreateView(FormView):
+    template_name = "contact.html"
+    form_class = PostForm
+    success_url = "/blog/post/"
+
+    def form_valid(self, form):
+        form.save()
+        return super().form_valid(form)
+'''
+
+
+class PostCreateView(CreateView):
+    model = Post
+    # fields = ['author', 'title', 'content', 'category', 'status', 'published_date']
+    form_class = PostForm
+    success_url = '/blog/post/'
     
+    def form_valid(self, form):
+        form.instance.author = self.request.user
+        return super().form_valid(form)

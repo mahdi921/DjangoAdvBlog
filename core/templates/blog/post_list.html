@@ -10,7 +10,9 @@
     <ol>
       {% for post in posts %}
       <li>
-        <h3>{{post.title}} - {{post.id}}</h3>
+        <a href="{% url 'blog:post-detail' pk=post.id %}">
+          <h3>{{post.title}} - {{post.id}}</h3>
+        </a>
         <p>{{post.author}} - {{post.created_date|date:'M d, Y'}}</p>
         <br />
       </li>
