@@ -6,6 +6,7 @@ from blog.models import Post
 from blog.forms import PostForm
 from django.shortcuts import get_object_or_404
 from django.utils import timezone
+from django.contrib.auth.mixins import LoginRequiredMixin, PermissionRequiredMixin
 
 
 # Function based view example (commented out)
@@ -43,14 +44,15 @@ class RedirectToMk(RedirectView):
 
 
 # Class based view to list all posts
-class PostList(ListView):
+class PostListView(LoginRequiredMixin, PermissionRequiredMixin, ListView):
+    permission_required = 'blog.view_post'
     queryset = Post.objects.all()
     context_object_name = 'posts'
     paginate_by = 2
 
 
 # Class based view to display post details
-class PostDetailView(DetailView):
+class PostDetailView(LoginRequiredMixin, DetailView):
     model = Post
 
 
@@ -68,7 +70,7 @@ class PostCreateView(FormView):
 
 
 # Class based view to create a new post
-class PostCreateView(CreateView):
+class PostCreateView(LoginRequiredMixin, CreateView):
     model = Post
     # Use a form class for the post creation form
     # fields = ['author', 'title', 'content', 'category', 'status', 'published_date']
@@ -82,13 +84,15 @@ class PostCreateView(CreateView):
 
 
 # Class based view to edit an existing post
-class PostEditView(UpdateView):
+class PostEditView(LoginRequiredMixin, UpdateView):
     model = Post
     form_class = PostForm
     success_url = '/blog/post/'
 
 
 # Class based view to delete a post
-class PostDeleteView(DeleteView):
+class PostDeleteView(LoginRequiredMixin, DeleteView):
     model = Post
     success_url = '/blog/post/'
+
+
