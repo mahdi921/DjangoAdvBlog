@@ -8,7 +8,7 @@
 <body>
     <h1>{{object.title}}</h1>
     <hr>
-    <small>{{object.author}} - {{object.created_date|date:'M d, Y'}}</small>
+    <small>{{object.author.first_name}} - {{object.created_date|date:'M d, Y'}}</small>
     <p>{{object.content}}</p>
 </body>
 </html>
