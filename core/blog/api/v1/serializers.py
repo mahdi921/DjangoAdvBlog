@@ -1,11 +1,16 @@
 from rest_framework import serializers
+from blog.models import Post
 
 
-class PostSerializer(serializers.Serializer):
-    id = serializers.IntegerField()
-    author = serializers.CharField()
-    title = serializers.CharField()
-    content = serializers.CharField()
-    created_date = serializers.DateTimeField()
-    updated_date = serializers.DateTimeField()
-    published_date = serializers.DateTimeField()
+# class PostSerializer(serializers.Serializer):
+#     id = serializers.IntegerField()
+#     title = serializers.CharField()
+
+
+class PostSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Post
+        fields = (
+            'id', 'author', 'title', 'content', 'category', 'status',
+            'created_date', 'updated_date', 'published_date'
+        )
