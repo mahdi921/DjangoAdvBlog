@@ -12,6 +12,7 @@ from rest_framework.response import Response
 from rest_framework.decorators import action
 from .serializers import PostSerializer, CategorySerializer
 from .permissions import IsOwnerOrReadOnly
+from .paginations import StandardResultsSetPagination
 from blog.models import Post,  Category
 
 
@@ -21,9 +22,14 @@ class PostModelViewSet(viewsets.ModelViewSet):
     serializer_class = PostSerializer
     queryset = Post.objects.filter(status=True)
     filter_backends = [DjangoFilterBackend, SearchFilter, OrderingFilter]
-    filterset_fields = ['category', 'author', 'status']
+    filterset_fields = {
+        'category': ['exact', 'in'],
+        'author': ['exact', 'in'],
+        'status': ['exact', 'in']
+    }
     search_fields = ['title', 'content', 'category__name']
     ordering_fields = ['published_date']
+    pagination_class = StandardResultsSetPagination
 
     @action(methods=['get'], detail=False)
     def get_ok(self, request):
