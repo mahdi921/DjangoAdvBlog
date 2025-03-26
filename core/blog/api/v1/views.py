@@ -1,4 +1,4 @@
-from django.shortcuts import get_object_or_404
+from django_filters.rest_framework import DjangoFilterBackend
 from rest_framework.generics import (
     ListCreateAPIView,
     RetrieveUpdateDestroyAPIView,
@@ -108,7 +108,9 @@ class PostModelViewSet(viewsets.ModelViewSet):
     permission_classes = [IsAuthenticatedOrReadOnly, IsOwnerOrReadOnly]
     serializer_class = PostSerializer
     queryset = Post.objects.filter(status=True)
-    
+    filter_backends = [DjangoFilterBackend]
+    filterset_fields = ['category', 'author', 'status']
+
     @action(methods=['get'], detail=False)
     def get_ok(self, request):
         return Response({'detail': 'ok'})
