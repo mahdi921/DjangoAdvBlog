@@ -10,6 +10,7 @@ from rest_framework import viewsets
 from rest_framework.response import Response
 from rest_framework.decorators import action
 from .serializers import PostSerializer, CategorySerializer
+from .permissions import IsOwnerOrReadOnly
 from blog.models import Post,  Category
 
 
@@ -104,7 +105,7 @@ class PostList(ListCreateAPIView):
 
 # Example for viewsets in CBV
 class PostModelViewSet(viewsets.ModelViewSet):
-    permission_classes = [IsAuthenticatedOrReadOnly]
+    permission_classes = [IsAuthenticatedOrReadOnly, IsOwnerOrReadOnly]
     serializer_class = PostSerializer
     queryset = Post.objects.filter(status=True)
     
