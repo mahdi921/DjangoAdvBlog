@@ -7,11 +7,32 @@ from rest_framework.permissions import (
     IsAuthenticatedOrReadOnly  # , IsAuthenticated
 )
 from rest_framework import viewsets
+from rest_framework.filters import SearchFilter
 from rest_framework.response import Response
 from rest_framework.decorators import action
 from .serializers import PostSerializer, CategorySerializer
 from .permissions import IsOwnerOrReadOnly
 from blog.models import Post,  Category
+
+
+# Example for viewsets in CBV
+class PostModelViewSet(viewsets.ModelViewSet):
+    permission_classes = [IsAuthenticatedOrReadOnly, IsOwnerOrReadOnly]
+    serializer_class = PostSerializer
+    queryset = Post.objects.filter(status=True)
+    filter_backends = [DjangoFilterBackend, SearchFilter]
+    filterset_fields = ['category', 'author', 'status']
+    search_fields = ['title', 'content', 'category__name']
+
+    @action(methods=['get'], detail=False)
+    def get_ok(self, request):
+        return Response({'detail': 'ok'})
+
+
+class CategoryModelViewSet(viewsets.ModelViewSet):
+    permission_classes = [IsAuthenticatedOrReadOnly]
+    serializer_class = CategorySerializer
+    queryset = Category.objects.all()
 
 
 # @api_view(['GET', 'PUT', 'DELETE'])
@@ -79,44 +100,25 @@ from blog.models import Post,  Category
 #         return Response(request.data)
 
 
-class PostDetail(RetrieveUpdateDestroyAPIView):
-    """
-    API view for post detail operations (GET/PUT/DELETE).
-    Handles retrieving, updating, and deleting a single post.
-    """
+# class PostDetail(RetrieveUpdateDestroyAPIView):
+#     """
+#     API view for post detail operations (GET/PUT/DELETE).
+#     Handles retrieving, updating, and deleting a single post.
+#     """
 
-    permission_classes = [IsAuthenticatedOrReadOnly]
-    serializer_class = PostSerializer
-    queryset = Post.objects.filter(status=True)
-    lookup_field = 'id'
-
-
-class PostList(ListCreateAPIView):
-    """
-    Generic API view for post list operations (GET/POST).
-    Inherits from ListCreateAPIView to provide built-in
-    list and create operations with automatic serialization.
-    """
-
-    permission_classes = [IsAuthenticatedOrReadOnly]
-    serializer_class = PostSerializer
-    queryset = Post.objects.filter(status=True)
+#     permission_classes = [IsAuthenticatedOrReadOnly]
+#     serializer_class = PostSerializer
+#     queryset = Post.objects.filter(status=True)
+#     lookup_field = 'id'
 
 
-# Example for viewsets in CBV
-class PostModelViewSet(viewsets.ModelViewSet):
-    permission_classes = [IsAuthenticatedOrReadOnly, IsOwnerOrReadOnly]
-    serializer_class = PostSerializer
-    queryset = Post.objects.filter(status=True)
-    filter_backends = [DjangoFilterBackend]
-    filterset_fields = ['category', 'author', 'status']
+# class PostList(ListCreateAPIView):
+#     """
+#     Generic API view for post list operations (GET/POST).
+#     Inherits from ListCreateAPIView to provide built-in
+#     list and create operations with automatic serialization.
+#     """
 
-    @action(methods=['get'], detail=False)
-    def get_ok(self, request):
-        return Response({'detail': 'ok'})
-
-
-class CategoryModelViewSet(viewsets.ModelViewSet):
-    permission_classes = [IsAuthenticatedOrReadOnly]
-    serializer_class = CategorySerializer
-    queryset = Category.objects.all()
+#     permission_classes = [IsAuthenticatedOrReadOnly]
+#     serializer_class = PostSerializer
+#     queryset = Post.objects.filter(status=True)
