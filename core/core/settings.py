@@ -42,6 +42,7 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'django_filters',
     'rest_framework',
+    'rest_framework.authtoken',
     'drf_yasg',
     'accounts',
     'blog',
@@ -141,10 +142,11 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 AUTH_USER_MODEL = 'accounts.User'
 
 # rest framework settings
-# REST_FRAMEWORK = {
-#         'DEFAULT_AUTHENTICATION_CLASSES': [
-#             'rest_framework.authentication.BasicAuthentication',
-#             'rest_framework.authentication.SessionAuthentication',
-#              'rest_framework.permissions.IsAuthenticated',
-#         ],
-# }
+REST_FRAMEWORK = {
+        'DEFAULT_AUTHENTICATION_CLASSES': [
+            'rest_framework.authentication.BasicAuthentication',
+            'rest_framework.authentication.SessionAuthentication',
+            'rest_framework.authentication.TokenAuthentication',
+
+        ],
+}
