@@ -12,6 +12,7 @@ from . import views
 app_name = "api-v1"
 
 urlpatterns = [
+    path('profile/', views.ProfileApiView.as_view(), name='profile'),
     path('registration/',
          views.RegistrationApiView.as_view(),
          name='registration'
