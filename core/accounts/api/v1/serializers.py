@@ -5,6 +5,7 @@ from django.core import exceptions
 from django.contrib.auth import authenticate
 from django.utils.translation import gettext_lazy as _
 from rest_framework_simplejwt.serializers import TokenObtainPairSerializer
+from accounts.models import Profile
 
 
 User = get_user_model()
@@ -102,3 +103,15 @@ class ChangePasswordSerializer(serializers.Serializer):
                 'new_password': list(e.messages)
             })
         return super().validate(attrs)
+
+
+class ProfileSeriaizer(serializers.ModelSerializer):
+    email = serializers.CharField(source='user.email', read_only=True)
+
+    class Meta:
+        model = Profile
+        fields = [
+            'id', 'email',
+            'first_name', 'last_name',
+            'avatar', 'bio'
+        ]
