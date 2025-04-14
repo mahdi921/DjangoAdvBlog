@@ -22,6 +22,9 @@ urlpatterns = [
         views.CustomDiscardAuthToken.as_view(),
         name='token-logout'
     ),
+    path('test-email/', views.TestEmailSend.as_view(), name='test-email'),
+    # path('activation/confirm/',),
+    # path('activation/resend/',),
     path(
         'change-password/',
         views.ChangePasswordApiView.as_view(),
