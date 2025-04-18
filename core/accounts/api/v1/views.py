@@ -15,8 +15,9 @@ from rest_framework.permissions import IsAuthenticated
 from rest_framework_simplejwt.views import TokenObtainPairView
 from django.contrib.auth import get_user_model
 from django.shortcuts import get_object_or_404
-from mail_templated import send_mail
+from mail_templated import EmailMessage
 from accounts.models import Profile
+from accounts.api.utils import EmailThreading
 
 User = get_user_model()
 
@@ -111,12 +112,13 @@ class ProfileApiView(generics.RetrieveUpdateAPIView):
 
 class TestEmailSend(generics.GenericAPIView):
     def get(self, request, *args, **kwargs):
-        send_mail('email/hello.tpl',
-                  {'name': 'Mike'},
-                  'm@m.com',
-                  ['fiftieth-pep-slam@duck.com'],
-                  fail_silently=False
-                  )
+
+        email_obj = EmailMessage('email/hello.tpl',
+                                 {'name': 'Mike'},
+                                 'm@m.com',
+                                 to=['fiftieth-pep-slam@duck.com'],
+                                 )
+        EmailThreading(email_obj).start()
         data = {
             'details': 'Email sent successfully'
         }
