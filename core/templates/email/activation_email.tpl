@@ -7,7 +7,7 @@ Account Activation
 {% block html %}
 To activate your account, please click the link below:
 
-<a href='{{token}}'>Activate</a>
+http://localhost:8000/accounts/api/v1/activation/confirm/{{token}}
 <br><br>
 If you did not request this email, please ignore it. Your account will remain unchanged.
 <br><br>
