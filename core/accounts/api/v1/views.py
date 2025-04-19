@@ -196,28 +196,28 @@ class ActivationResendApiView(generics.GenericAPIView):
     serializer_class = ActivationResendSerializer
 
     def post(self, request, *args, **kwargs):
-        
+
         serializer = self.serializer_class(data=request.data)
-        
+
         serializer.is_valid(raise_exception=True)
-        
+
         user_obj = serializer.validated_data['user']
         token = self.get_tokens_for_user(user_obj)
-        
+
         email_obj = EmailMessage(
-                        'email/activation_email.tpl',
-                        {'token': token},
-                        'm@m.com',
-                        to=[user_obj.email],
-                    )
-        
+            'email/activation_email.tpl',
+            {'token': token},
+            'm@m.com',
+            to=[user_obj.email],
+        )
+
         EmailThreading(email_obj).start()
-        
+
         data = {
             'details': 'Email resent successfully'
         }
         return Response(data, status=status.HTTP_200_OK)
-    
+
     def get_tokens_for_user(self, user):
         refresh = RefreshToken.for_user(user)
         access = str(refresh.access_token)
