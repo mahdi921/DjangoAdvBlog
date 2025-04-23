@@ -6,6 +6,8 @@ from .serializers import (
     ChangePasswordSerializer,
     ProfileSeriaizer,
     ActivationResendSerializer,
+    ResetPasswordSerializer,
+    ResetPasswordConfirmSerializer,
 )
 from rest_framework.response import Response
 from rest_framework import status
@@ -157,7 +159,6 @@ class TestEmailSend(generics.GenericAPIView):
 
 class ActivationApiView(APIView):
     def get(self, request, token, *args, **kwargs):
-        # decode -> user_id
         try:
             token = jwt.decode(token, config('SECRET_KEY'),
                                algorithms=['HS256'])
@@ -222,3 +223,89 @@ class ActivationResendApiView(generics.GenericAPIView):
         refresh = RefreshToken.for_user(user)
         access = str(refresh.access_token)
         return access
+
+
+class ResetPasswordApiView(generics.GenericAPIView):
+    serializer_class = ResetPasswordSerializer
+    permission_classes = [~IsAuthenticated]
+
+    def post(self, request, *args, **kwargs):
+        serializer = self.serializer_class(data=request.data)
+
+        serializer.is_valid(raise_exception=True)
+
+        user_obj = serializer.validated_data['user']
+        if user_obj:
+            token = self.get_tokens_for_user(user_obj)
+            email_obj = EmailMessage(
+                'email/password-reset.tpl',
+                {'token': token},
+                'm@m.com',
+                to=[user_obj.email]
+            )
+            EmailThreading(email_obj).start()
+
+        data = {
+            'details': 'Email sent successfully'
+        }
+        return Response(data, status=status.HTTP_200_OK)
+
+    def get_tokens_for_user(self, user):
+        refresh = RefreshToken.for_user(user)
+        access = str(refresh.access_token)
+        return access
+
+
+class ResetPasswordConfirmApiView(generics.GenericAPIView):
+    serializer_class = ResetPasswordConfirmSerializer
+    model = User
+    permission_classes = [~IsAuthenticated]
+    __user_id = None
+
+    def get(self, request, token, *args, **kwargs):
+        if not token:
+            return Response(
+                {'details': 'Access denied'},
+                status=status.HTTP_403_FORBIDDEN
+            )
+        try:
+            token = jwt.decode(token, config('SECRET_KEY'),
+                               algorithms=['HS256'])
+            self.__class__.__user_id = token.get('user_id')
+
+        except jwt.ExpiredSignatureError:
+            return Response(
+                {'details': 'Token expired'},
+                status=status.HTTP_400_BAD_REQUEST
+            )
+        except jwt.InvalidSignatureError:
+            return Response(
+                {'details': 'Invalid token signature'},
+                status=status.HTTP_400_BAD_REQUEST
+            )
+        except jwt.DecodeError:
+            return Response(
+                {'details': 'Invalid token decode error'},
+                status=status.HTTP_400_BAD_REQUEST
+            )
+        data = {
+            'details': 'link is valid',
+        }
+        return Response(data, status=status.HTTP_200_OK)
+
+    def put(self, request, *args, **kwargs):
+        user_obj = User.objects.get(id=self.__class__.__user_id)
+        serializer = self.serializer_class(data=request.data)
+        serializer.is_valid(raise_exception=True)
+        if user_obj:
+            user_obj.set_password(serializer.validated_data['password'])
+            user_obj.save()
+            self.__class__.__user_id = None
+            data = {
+                'details': 'Password updated successfully'
+            }
+            return Response(data, status=status.HTTP_204_NO_CONTENT)
+        return Response(
+            serializer.errors,
+            status=status.HTTP_400_BAD_REQUEST
+        )
