@@ -6,6 +6,8 @@ from django.contrib.auth import authenticate
 from django.utils.translation import gettext_lazy as _
 from rest_framework_simplejwt.serializers import TokenObtainPairSerializer
 from accounts.models import Profile
+import jwt
+from decouple import config
 
 
 User = get_user_model()
@@ -140,4 +142,37 @@ class ActivationResendSerializer(serializers.Serializer):
                 'detail': 'User is already verified.'
             })
         attrs['user'] = user_obj
+        return super().validate(attrs)
+
+
+class ResetPasswordSerializer(serializers.Serializer):
+    email = serializers.EmailField(required=True)
+
+    def validate(self, attrs):
+        email = attrs.get('email')
+        try:
+            user_obj = User.objects.get(email=email)
+        except User.DoesNotExist:
+            attrs['user'] = None
+            return super().validate(attrs)
+        
+        attrs['user'] = user_obj
+        return super().validate(attrs)
+
+
+class ResetPasswordConfirmSerializer(serializers.Serializer):
+    password = serializers.CharField(required=True)
+    password1 = serializers.CharField(required=True)
+
+    def validate(self, attrs):
+        if attrs.get('password') != attrs.get('password1'):
+            raise serializers.ValidationError({
+                'detail': 'Password fields didn\'t match.'
+            })
+        try:
+            validate_password(attrs.get('password'))
+        except exceptions.ValidationError as e:
+            raise serializers.ValidationError({
+                'password': list(e.messages)
+            })
         return super().validate(attrs)
