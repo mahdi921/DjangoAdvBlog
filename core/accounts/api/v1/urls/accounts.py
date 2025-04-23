@@ -32,6 +32,13 @@ urlpatterns = [
         views.ChangePasswordApiView.as_view(),
         name='change-password'
     ),
+    path('reset-password/',
+         views.ResetPasswordApiView.as_view(),
+         name='reset-password'
+         ),
+    path('reset-password/confirm/<str:token>',
+         views.ResetPasswordConfirmApiView.as_view(),
+         name='reset-password-confirm'),
     path('jwt/create/', TokenObtainPairView.as_view(), name='jwt-create'),
     path('jwt/refresh/', TokenRefreshView.as_view(), name='jwt-refresh'),
     path('jwt/verify/', TokenVerifyView.as_view(), name='jwt-verify'),
