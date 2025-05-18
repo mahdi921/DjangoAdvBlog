@@ -1,12 +1,5 @@
 Django>=4.2,<5
-certifi
-asgiref
-charset-normalizer
-idna
 python-decouple
-requests
-sqlparse
-urllib3
 pillow
 djangorestframework
 markdown
