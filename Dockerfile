@@ -8,6 +8,6 @@ WORKDIR /app
 COPY requirements.txt /app/
 
 RUN pip3 install --upgrade pip
-RUN pip3 install -r requirements.txt
+RUN pip3 install -r requirements.txt -i https://pypi.org/simple/
 
 COPY ./core /app/
