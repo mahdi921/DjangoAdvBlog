@@ -14,6 +14,7 @@ Including another URLconf
     1. Import the include() function: from django.urls import include, path
     2. Add a URL to urlpatterns:  path('blog/', include('blog.urls'))
 """
+
 from django.contrib import admin
 from django.urls import path, include
 from django.conf import settings
@@ -25,7 +26,7 @@ from drf_yasg import openapi
 schema_view = get_schema_view(
     openapi.Info(
         title="Blog API",
-        default_version='v1',
+        default_version="v1",
         description="API documentation for Blog application",
         terms_of_service="404",
         contact=openapi.Contact(email="a@aa.com"),
@@ -36,20 +37,28 @@ schema_view = get_schema_view(
 )
 
 urlpatterns = [
-    path('admin/', admin.site.urls),
-    path('blog/', include('blog.urls')),
+    path("admin/", admin.site.urls),
+    path("blog/", include("blog.urls")),
     path("accounts/", include("accounts.urls")),
-    path('api-auth/', include('rest_framework.urls')),
+    path("api-auth/", include("rest_framework.urls")),
     # path('accounts/', include('accounts.urls')),
     # Swagger documentation URLs
-    path('swagger/', schema_view.with_ui('swagger',
-         cache_timeout=0), name='schema-swagger-ui'),
-    path('redoc/', schema_view.with_ui('redoc',
-         cache_timeout=0), name='schema-redoc'),
+    path(
+        "swagger/",
+        schema_view.with_ui("swagger", cache_timeout=0),
+        name="schema-swagger-ui",
+    ),
+    path(
+        "redoc/",
+        schema_view.with_ui("redoc", cache_timeout=0),
+        name="schema-redoc",
+    ),
 ]
 
 if settings.DEBUG:
-    urlpatterns += static(settings.STATIC_URL,
-                          document_root=settings.STATIC_ROOT)
-    urlpatterns += static(settings.MEDIA_URL,
-                          document_root=settings.MEDIA_ROOT)
+    urlpatterns += static(
+        settings.STATIC_URL, document_root=settings.STATIC_ROOT
+    )
+    urlpatterns += static(
+        settings.MEDIA_URL, document_root=settings.MEDIA_ROOT
+    )

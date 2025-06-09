@@ -1,11 +1,12 @@
 from django_filters.rest_framework import DjangoFilterBackend
+
 # from rest_framework.generics import (
 #     ListCreateAPIView,
 #     RetrieveUpdateDestroyAPIView,
 # )
 from rest_framework.permissions import (
-    IsAuthenticatedOrReadOnly  # , IsAuthenticated
-)
+    IsAuthenticatedOrReadOnly,
+)  # , IsAuthenticated
 from rest_framework import viewsets
 from rest_framework.filters import SearchFilter, OrderingFilter
 from rest_framework.response import Response
@@ -13,7 +14,7 @@ from rest_framework.decorators import action
 from .serializers import PostSerializer, CategorySerializer
 from .permissions import IsOwnerOrReadOnly
 from .paginations import StandardResultsSetPagination
-from blog.models import Post,  Category
+from blog.models import Post, Category
 
 
 # Example for viewsets in CBV
@@ -23,17 +24,17 @@ class PostModelViewSet(viewsets.ModelViewSet):
     queryset = Post.objects.filter(status=True)
     filter_backends = [DjangoFilterBackend, SearchFilter, OrderingFilter]
     filterset_fields = {
-        'category': ['exact', 'in'],
-        'author': ['exact', 'in'],
-        'status': ['exact', 'in']
+        "category": ["exact", "in"],
+        "author": ["exact", "in"],
+        "status": ["exact", "in"],
     }
-    search_fields = ['title', 'content', 'category__name']
-    ordering_fields = ['published_date']
+    search_fields = ["title", "content", "category__name"]
+    ordering_fields = ["published_date"]
     pagination_class = StandardResultsSetPagination
 
-    @action(methods=['get'], detail=False)
+    @action(methods=["get"], detail=False)
     def get_ok(self, request):
-        return Response({'detail': 'ok'})
+        return Response({"detail": "ok"})
 
 
 class CategoryModelViewSet(viewsets.ModelViewSet):

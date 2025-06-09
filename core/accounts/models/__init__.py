@@ -2,6 +2,4 @@ from .users import (
     User,
     UserManager,
 )
-from .profiles import (
-    Profile
-)
+from .profiles import Profile

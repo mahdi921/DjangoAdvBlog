@@ -1,5 +1,6 @@
 from django.db import models
 from django.urls import reverse
+
 # from django.contrib.auth import get_user_model
 
 # get user model object
@@ -7,15 +8,17 @@ from django.urls import reverse
 
 
 class Post(models.Model):
-    '''
+    """
     this is a class to define posts for blog app
-    '''
-    author = models.ForeignKey('accounts.Profile', on_delete=models.CASCADE)
+    """
+
+    author = models.ForeignKey("accounts.Profile", on_delete=models.CASCADE)
     title = models.CharField(max_length=255)
     content = models.TextField()
     image = models.ImageField(null=True, blank=True)
     category = models.ForeignKey(
-        'Category', on_delete=models.SET_NULL, null=True)
+        "Category", on_delete=models.SET_NULL, null=True
+    )
     status = models.BooleanField(default=False)
     # login_required = models.BooleanField(default=False)
     # staff_only = models.BooleanField(default=False)
