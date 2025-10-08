@@ -11,3 +11,5 @@ django-mail-templated
 djoser
 black
 flake8
+pytest
+pytest-django
