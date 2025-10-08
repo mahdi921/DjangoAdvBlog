@@ -444,3 +444,4 @@ cython_debug/
 
 .qodo
 /static/CACHE/
+.vscode/settings.json
