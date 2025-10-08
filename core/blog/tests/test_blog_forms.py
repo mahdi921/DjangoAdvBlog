@@ -3,6 +3,7 @@ from blog.forms import PostForm
 from blog.models import Category
 from django.utils import timezone
 
+
 class TestPostForm(TestCase):
     def test_post_form_with_valid_data(self):
         category_obj = Category.objects.create(name='test category')

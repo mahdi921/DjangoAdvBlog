@@ -1,5 +1,5 @@
 from django.test import TestCase
-from blog.models import Post, Category
+from blog.models import Post
 from accounts.models import User, Profile
 from django.utils import timezone
 
@@ -16,9 +16,9 @@ class TestPostModel(TestCase):
             last_name='test_l_name',
             bio='test_bio'
         )
-        
+
     def test_create_post_with_valid_data(self):
-        
+
         post = Post.objects.create(
             author=self.profile,
             title='test',
