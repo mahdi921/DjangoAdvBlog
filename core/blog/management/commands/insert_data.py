@@ -6,13 +6,19 @@ import random
 from django.utils import timezone
 
 category_list = [
-    'Technology', 'Health', 'Travel', 'Food',
-    'Lifestyle', 'Education', 'Finance', "IT"
+    "Technology",
+    "Health",
+    "Travel",
+    "Food",
+    "Lifestyle",
+    "Education",
+    "Finance",
+    "IT",
 ]
 
 
 class Command(BaseCommand):
-    help = 'Inserts fake data into blog app for testing purposes'
+    help = "Inserts fake data into blog app for testing purposes"
 
     def __init__(self, *args, **kwargs):
         super(Command, self).__init__(*args, **kwargs)
@@ -20,7 +26,8 @@ class Command(BaseCommand):
 
     def handle(self, *args, **options):
         user = User.objects.create_user(
-            email=self.fake.email(), password='Test@987654321')
+            email=self.fake.email(), password="Test@987654321"
+        )
         profile = Profile.objects.get(user=user)
         profile.first_name = self.fake.first_name()
         profile.last_name = self.fake.last_name()
@@ -35,8 +42,7 @@ class Command(BaseCommand):
                 author=profile,
                 title=self.fake.sentence(nb_words=6),
                 content=self.fake.text(max_nb_chars=2000),
-                category=Category.objects.get(
-                    name=random.choice(category_list)),
+                category=Category.objects.get(name=random.choice(category_list)),
                 status=random.choice([True, False]),
-                published_date=timezone.now()
+                published_date=timezone.now(),
             )

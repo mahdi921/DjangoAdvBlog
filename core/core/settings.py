@@ -24,7 +24,7 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 DEBUG = config("DEBUG", cast=bool, default=True)
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = config("SECRET_KEY", default='test') if DEBUG is False else "test"
+SECRET_KEY = config("SECRET_KEY", default="test") if DEBUG is False else "test"
 # 'django-insecure-zgm*+l*+d$ucp#-nm9+tuzbhjvtkc!)_(o4y_h7mjr6uu0m7c^'
 
 
