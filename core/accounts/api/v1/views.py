@@ -68,9 +68,7 @@ class CustomObtainAuthToken(ObtainAuthToken):
         serializer.is_valid(raise_exception=True)
         user = serializer.validated_data["user"]
         token, created = Token.objects.get_or_create(user=user)
-        return Response(
-            {"token": token.key, "user_id": user.pk, "email": user.email}
-        )
+        return Response({"token": token.key, "user_id": user.pk, "email": user.email})
 
 
 class CustomDiscardAuthToken(APIView):
@@ -105,9 +103,7 @@ class ChangePasswordApiView(generics.GenericAPIView):
                     {"old_password": ["Wrong password."]},
                     status=status.HTTP_400_BAD_REQUEST,
                 )
-            self.object.set_password(
-                serializer.validated_data.get("new_password")
-            )
+            self.object.set_password(serializer.validated_data.get("new_password"))
             self.object.save()
             data = {
                 "detail": "Password updated successfully",
@@ -152,9 +148,7 @@ class TestEmailSend(generics.GenericAPIView):
 class ActivationApiView(APIView):
     def get(self, request, token, *args, **kwargs):
         try:
-            token = jwt.decode(
-                token, config("SECRET_KEY"), algorithms=["HS256"]
-            )
+            token = jwt.decode(token, config("SECRET_KEY"), algorithms=["HS256"])
             user_id = token.get("user_id")
 
         except jwt.ExpiredSignatureError:
@@ -225,10 +219,7 @@ class ResetPasswordApiView(generics.GenericAPIView):
         Handle GET requests to prompt the user to enter their email
         for password reset.
         """
-        return Response(
-            {"details": "Enter Your Email"},
-            status=status.HTTP_200_OK
-        )
+        return Response({"details": "Enter Your Email"}, status=status.HTTP_200_OK)
 
     def post(self, request, *args, **kwargs):
         """

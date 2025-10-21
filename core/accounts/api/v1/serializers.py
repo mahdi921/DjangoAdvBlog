@@ -6,8 +6,6 @@ from django.contrib.auth import authenticate
 from django.utils.translation import gettext_lazy as _
 from rest_framework_simplejwt.serializers import TokenObtainPairSerializer
 from accounts.models import Profile
-import jwt
-from decouple import config
 from django.contrib.auth.tokens import PasswordResetTokenGenerator
 from django.utils.http import urlsafe_base64_encode
 from django.utils.encoding import force_bytes
@@ -19,9 +17,7 @@ User = get_user_model()
 
 
 class RegistrationSerializer(serializers.ModelSerializer):
-    password2 = serializers.CharField(
-        min_length=11, max_length=255, write_only=True
-    )
+    password2 = serializers.CharField(min_length=11, max_length=255, write_only=True)
 
     class Meta:
         model = User
@@ -105,9 +101,7 @@ class ChangePasswordSerializer(serializers.Serializer):
         try:
             validate_password(attrs.get("new_password"))
         except exceptions.ValidationError as e:
-            raise serializers.ValidationError(
-                {"new_password": list(e.messages)}
-            )
+            raise serializers.ValidationError({"new_password": list(e.messages)})
         return super().validate(attrs)
 
 
@@ -128,13 +122,9 @@ class ActivationResendSerializer(serializers.Serializer):
         try:
             user_obj = User.objects.get(email=email)
         except User.DoesNotExist:
-            raise serializers.ValidationError(
-                {"detail": "User does not exist."}
-            )
+            raise serializers.ValidationError({"detail": "User does not exist."})
         if user_obj.is_verified:
-            raise serializers.ValidationError(
-                {"detail": "User is already verified."}
-            )
+            raise serializers.ValidationError({"detail": "User is already verified."})
         attrs["user"] = user_obj
         return super().validate(attrs)
 

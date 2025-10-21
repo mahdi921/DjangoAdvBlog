@@ -1,8 +1,6 @@
 # Import necessary modules and classes from Django and the blog app
-from django.shortcuts import render
 from django.views.generic import (
     RedirectView,
-    FormView,
     DetailView,
     ListView,
     TemplateView,
@@ -12,8 +10,6 @@ from django.views.generic import (
 )
 from blog.models import Post
 from blog.forms import PostForm
-from django.shortcuts import get_object_or_404
-from django.utils import timezone
 from django.contrib.auth.mixins import (
     LoginRequiredMixin,
     PermissionRequiredMixin,

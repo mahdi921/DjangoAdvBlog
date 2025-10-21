@@ -16,8 +16,11 @@ exclude =
     migrations,
     tests/*/migrations,
     tests/test_*.py,
+    accounts/apps.py,
+    blog/tests/test_*.py,
+    accounts/tests/test_*.py,
 
 ignore = 
     E501,
 
-max-line-length = 79  # PEP 8 recommends 79, but Black uses 88
+max-line-length = 79
