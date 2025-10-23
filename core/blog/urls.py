@@ -7,6 +7,7 @@ urlpatterns = [
     path("", views.IndexView.as_view(), name="index"),
     # path("cbv", views.IndexView.as_view(), name='cbv-index'),
     path("post/", views.PostListView.as_view(), name="post-list"),
+    path("post/api/", views.PostListAPIView.as_view(), name="post-list-api"),
     # path("go-to-mk/<int:pk>", views.RedirectToMk.as_view(), name="go-to-mk"),
     path("post/<int:pk>/", views.PostDetailView.as_view(), name="post-detail"),
     path("post/create/", views.PostCreateView.as_view(), name="post-create"),

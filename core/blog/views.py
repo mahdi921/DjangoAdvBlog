@@ -58,6 +58,10 @@ class PostListView(LoginRequiredMixin, PermissionRequiredMixin, ListView):
     paginate_by = 2
 
 
+class PostListAPIView(TemplateView):
+    template_name = "blog/post_list_api.html"
+
+
 # Class based view to display post details
 class PostDetailView(LoginRequiredMixin, DetailView):
     model = Post
