@@ -1,5 +1,8 @@
-from locust import HttpUser
+from locust import HttpUser, task
 
 
 class QuickstartUser(HttpUser):
-    pass
+
+    @task
+    def post_list(self):
+        self.client.get("blog/post/")
