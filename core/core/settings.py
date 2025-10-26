@@ -177,3 +177,8 @@ DJOSER = {
 SIMPLE_JWT = {
     "AUTH_HEADER_TYPES": ("JWT",),
 }
+
+
+# celery configs
+
+CELERY_BROKER_URL = "redis://redis:6379/1"
