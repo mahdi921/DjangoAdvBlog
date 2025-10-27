@@ -17,4 +17,5 @@ Faker
 
 #background processing and cache
 celery
+django-celery-beat
 Redis
