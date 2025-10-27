@@ -47,6 +47,7 @@ INSTALLED_APPS = [
     "rest_framework_simplejwt",
     "drf_yasg",
     "mail_templated",
+    'django_celery_beat',
     "accounts",
     "blog",
 ]
