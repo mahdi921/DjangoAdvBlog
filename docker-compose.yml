@@ -1,4 +1,13 @@
 services:
+
+  redis:
+    container_name: redis
+    image: redis:8.2.2-alpine
+    ports:
+      - "6379:6379"
+    command: redis-server --save 60 1 --loglevel warning
+    restart: always
+
   backend:
     build: .
     container_name: backend
@@ -12,6 +21,17 @@ services:
     environment:
       - SECRET_KEY=test
       - DEBUG=True
+    depends_on:
+      - redis
+  worker:
+    container_name: celery_worker
+    build: .
+    command: celery -A core worker -l INFO
+    depends_on:
+      - redis
+      - backend
+    volumes:
+      - ./core:/app
   smtp4dev:
       image: rnwood/smtp4dev:v3
       restart: always
@@ -80,19 +100,19 @@ services:
 
         #Specifies the port the IMAP server will listen on - allows standard email clients to view/retrieve messages
         #"ServerOptions__ImapPort"=143
-  master:
-    image: locustio/locust
-    ports:
-     - "8089:8089"
-    volumes:
-      - ./core/locust:/mnt/locust
-    command: -f /mnt/locust/locustfile.py --master -H http://0.0.0.0:8000/
+  # master:
+  #   image: locustio/locust
+  #   ports:
+  #    - "8089:8089"
+  #   volumes:
+  #     - ./core/locust:/mnt/locust
+  #   command: -f /mnt/locust/locustfile.py --master -H http://0.0.0.0:8000/
   
-  worker:
-    image: locustio/locust
-    volumes:
-      - ./core/locust:/mnt/locust
-    command: -f /mnt/locust/locustfile.py --worker --master-host master
+  # worker:
+  #   image: locustio/locust
+  #   volumes:
+  #     - ./core/locust:/mnt/locust
+  #   command: -f /mnt/locust/locustfile.py --worker --master-host master
 
 volumes:
   smtp4dev-data:
