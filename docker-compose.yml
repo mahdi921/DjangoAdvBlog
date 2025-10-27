@@ -24,11 +24,14 @@ services:
     depends_on:
       - redis
   worker:
+    container_name: celery_worker
     build: .
     command: celery -A core worker -l INFO
     depends_on:
       - redis
       - backend
+    volumes:
+      - ./core:/app
   smtp4dev:
       image: rnwood/smtp4dev:v3
       restart: always
