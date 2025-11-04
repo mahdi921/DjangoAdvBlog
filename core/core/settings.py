@@ -47,7 +47,7 @@ INSTALLED_APPS = [
     "rest_framework_simplejwt",
     "drf_yasg",
     "mail_templated",
-    'django_celery_beat',
+    "django_celery_beat",
     "accounts",
     "blog",
 ]
@@ -183,3 +183,14 @@ SIMPLE_JWT = {
 # celery configs
 
 CELERY_BROKER_URL = "redis://redis:6379/1"
+
+# Caching configs
+CACHES = {
+    "default": {
+        "BACKEND": "django_redis.cache.RedisCache",
+        "LOCATION": "redis://redis:6379/2",
+        "OPTIONS": {
+            "CLIENT_CLASS": "django_redis.client.DefaultClient",
+        },
+    }
+}
