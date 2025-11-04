@@ -47,7 +47,7 @@ INSTALLED_APPS = [
     "rest_framework_simplejwt",
     "drf_yasg",
     "mail_templated",
-    'django_celery_beat',
+    "django_celery_beat",
     "accounts",
     "blog",
 ]
@@ -191,6 +191,6 @@ CACHES = {
         "LOCATION": "redis://redis:6379/2",
         "OPTIONS": {
             "CLIENT_CLASS": "django_redis.client.DefaultClient",
-        }
+        },
     }
 }
