@@ -28,7 +28,7 @@ SECRET_KEY = config("SECRET_KEY", default="test") if DEBUG is False else "test"
 # 'django-insecure-zgm*+l*+d$ucp#-nm9+tuzbhjvtkc!)_(o4y_h7mjr6uu0m7c^'
 
 
-ALOWED_HOSTS = config("ALOWED_HOSTS", cast=Csv()) if DEBUG is False else ["*"]
+ALLOWED_HOSTS = config("ALLOWED_HOSTS", cast=Csv(),default="0.0.0.0")
 
 
 # Application definition
