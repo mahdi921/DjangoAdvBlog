@@ -28,7 +28,7 @@ SECRET_KEY = config("SECRET_KEY", default="test") if DEBUG is False else "test"
 # 'django-insecure-zgm*+l*+d$ucp#-nm9+tuzbhjvtkc!)_(o4y_h7mjr6uu0m7c^'
 
 
-ALLOWED_HOSTS = config("ALLOWED_HOSTS", cast=Csv(),default="0.0.0.0")
+ALLOWED_HOSTS = config("ALLOWED_HOSTS", cast=Csv(), default="0.0.0.0")
 
 
 # Application definition
@@ -40,6 +40,7 @@ INSTALLED_APPS = [
     "django.contrib.sessions",
     "django.contrib.messages",
     "django.contrib.staticfiles",
+    "django.contrib.postgres",
     "django_filters",
     "rest_framework",
     "djoser",
@@ -90,8 +91,12 @@ WSGI_APPLICATION = "core.wsgi.application"
 
 DATABASES = {
     "default": {
-        "ENGINE": "django.db.backends.sqlite3",
-        "NAME": BASE_DIR / "db.sqlite3",
+        "ENGINE": "django.db.backends.postgresql",
+        "NAME": config("DB_NAME"),
+        "USER": config("DB_USER"),
+        "PASSWORD": config("DB_PASSWORD"),
+        "HOST": config("DB_HOST"),
+        "PORT": config("DB_PORT", cast=int),
     }
 }
 

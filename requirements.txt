@@ -23,3 +23,6 @@ django-redis
 
 #deployment module
 gunicorn
+
+#postgresql adapter
+psycopg[binary]

@@ -1,5 +1,17 @@
 services:
 
+  db:
+    container_name: postgres
+    image: postgres:alpine
+    volumes:
+      - postgres_data:/var/lib/postgresql/data/
+    env_file:
+      - ./.pgenv
+    restart: always
+    ports:
+      - "5432:5432"
+
+
   redis:
     container_name: redis
     image: redis:8.2.2-alpine
@@ -18,11 +30,11 @@ services:
       - ./requirements.txt:/app/requirements.txt
     ports:
       - "8000:8000"
-    environment:
-      - SECRET_KEY=test
-      - DEBUG=True
+    env_file:
+      - ./.env
     depends_on:
       - redis
+      - db
   worker:
     container_name: celery_worker
     build: .
@@ -32,6 +44,8 @@ services:
       - backend
     volumes:
       - ./core:/app
+    env_file:
+      - ./.env
   smtp4dev:
       image: rnwood/smtp4dev:v3
       restart: always
@@ -116,3 +130,4 @@ services:
 
 volumes:
   smtp4dev-data:
+  postgres_data:
