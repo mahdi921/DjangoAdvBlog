@@ -9,3 +9,7 @@ class PostForm(forms.ModelForm):
         fields = ["title", "content", "category", "status", "published_date"]
         verbose_name = "Post"
         verbose_name_plural = "Posts"
+
+
+class SearchForm(forms.Form):
+    query = forms.CharField()

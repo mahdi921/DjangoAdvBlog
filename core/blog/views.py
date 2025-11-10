@@ -1,4 +1,9 @@
 # Import necessary modules and classes from Django and the blog app
+from django.contrib.postgres.search import (
+    SearchVector,
+    SearchQuery,
+    SearchRank,
+)
 from django.views.generic import (
     RedirectView,
     DetailView,
@@ -8,13 +13,14 @@ from django.views.generic import (
     UpdateView,
     DeleteView,
 )
+from django.views import View
 from blog.models import Post
-from blog.forms import PostForm
+from blog.forms import PostForm, SearchForm
 from django.contrib.auth.mixins import (
     LoginRequiredMixin,
     PermissionRequiredMixin,
 )
-
+from django.shortcuts import render
 
 # Function based view example (commented out)
 """
@@ -34,7 +40,6 @@ class IndexView(TemplateView):
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         # Add custom context data
-        # context['posts'] = Post.objects.filter(status=1, published_date__lte=timezone.now())
         context["name"] = "Mahdi2"
         return context
 
@@ -80,7 +85,6 @@ class PostCreateView(FormView):
 class PostCreateView(LoginRequiredMixin, CreateView):
     model = Post
     # Use a form class for the post creation form
-    # fields = ['author', 'title', 'content', 'category', 'status', 'published_date']
     form_class = PostForm
     success_url = "/blog/post/"
 
@@ -101,3 +105,42 @@ class PostEditView(LoginRequiredMixin, UpdateView):
 class PostDeleteView(LoginRequiredMixin, DeleteView):
     model = Post
     success_url = "/blog/post/"
+
+
+def post_search(request):
+    form = SearchForm()
+    query = None
+    results = []
+
+    if 'query' in request.GET:
+        form = SearchForm(request.GET)
+        if form.is_valid():
+            query = form.cleaned_data['query']
+            search_vector = SearchVector('title', 'content')
+            search_query = SearchQuery(query)
+            results = Post.objects.annotate(
+                search=search_vector,
+                rank=SearchRank(search_vector, search_query),
+            ).filter(search=query).order_by('-rank')
+    return render(
+        request,
+        'blog/post_search.html',
+        {
+            'form': form,
+            'query': query,
+            'results': results
+        }
+    )
+
+
+class TestView(View):
+    template_name = "blog/post_search.html"
+    form_class = SearchForm
+
+    def get_queryset(self):
+        form = self.form_class(self.request.GET)
+        if form.is_valid():
+            query = form.cleaned_data['query']
+            return Post.objects.annotate(
+                search=SearchVector('title', 'content'),
+            ).filter(search=query)

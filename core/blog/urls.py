@@ -16,5 +16,7 @@ urlpatterns = [
         views.PostDeleteView.as_view(),
         name="post-delete",
     ),
+    path('post/search/', views.post_search, name='post-search'),
+    path('test/', views.TestView.as_view(), name='test-view'),
     path("api/v1/", include("blog.api.v1.urls")),
 ]
