@@ -36,7 +36,8 @@ class UserManager(BaseUserManager):
 
 class User(AbstractBaseUser, PermissionsMixin):
     # Custom User Model For The Project or App
-    email = models.EmailField(verbose_name="Email Address", max_length=255, unique=True)
+    email = models.EmailField(verbose_name="Email Address",
+                              max_length=255, unique=True)
     is_staff = models.BooleanField(default=False)
     is_superuser = models.BooleanField(default=False)
     is_active = models.BooleanField(default=True)
