@@ -1,8 +1,10 @@
 # Import necessary modules and classes from Django and the blog app
 from django.contrib.postgres.search import (
     SearchVector,
-    SearchQuery,
-    SearchRank,
+    # Weighted search modules
+    # SearchQuery,
+    # SearchRank,
+    TrigramSimilarity,
 )
 from django.views.generic import (
     RedirectView,
@@ -107,6 +109,7 @@ class PostDeleteView(LoginRequiredMixin, DeleteView):
     success_url = "/blog/post/"
 
 
+# function based view to utilize postgres' search module
 def post_search(request):
     form = SearchForm()
     query = None
@@ -116,12 +119,18 @@ def post_search(request):
         form = SearchForm(request.GET)
         if form.is_valid():
             query = form.cleaned_data['query']
-            search_vector = SearchVector('title', 'content')
-            search_query = SearchQuery(query)
+            # weighted search
+            # search_vector = SearchVector('title', weight='A'
+            #                              ) + SearchVector(
+            #                                  'content', weight='B')
+            # search=search_vector,
+            # rank=SearchRank(search_vector, search_query),
+            # filter(rank__gte=0.3)
+            # search_query = SearchQuery(query)
             results = Post.objects.annotate(
-                search=search_vector,
-                rank=SearchRank(search_vector, search_query),
-            ).filter(search=query).order_by('-rank')
+                # trigram search
+                similarity=TrigramSimilarity('title', query)
+            ).filter(similarity__gt=0.1).order_by('-similarity')
     return render(
         request,
         'blog/post_search.html',
@@ -133,6 +142,7 @@ def post_search(request):
     )
 
 
+# this was to test cbv search
 class TestView(View):
     template_name = "blog/post_search.html"
     form_class = SearchForm
